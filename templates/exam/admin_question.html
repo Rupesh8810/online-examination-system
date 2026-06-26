@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block title %}Questions{% endblock %}
+{% block sidebar %}{% include 'exam/admin_sidebar.html' %}{% endblock %}
+{% block page_title %}Question Bank{% endblock %}
+{% block content %}
+<div class="grid grid-cols-2 gap-4">
+  <a href="{% url 'admin-add-question' %}" class="card hover:shadow-md transition text-center p-6 border-2 hover:border-blue-300">
+    <div class="text-3xl mb-2">➕</div><p class="font-semibold">Add Question</p>
+  </a>
+  <a href="{% url 'admin-view-question' %}" class="card hover:shadow-md transition text-center p-6 border-2 hover:border-blue-300">
+    <div class="text-3xl mb-2">📋</div><p class="font-semibold">View Questions</p>
+  </a>
+</div>
+{% endblock %}

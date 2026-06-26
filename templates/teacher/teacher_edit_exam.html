@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block title %}Edit Exam{% endblock %}
+{% block sidebar %}{% include 'teacher/teacher_sidebar.html' %}{% endblock %}
+{% block page_title %}Edit Exam – {{ course.course_name }}{% endblock %}
+{% block content %}
+<div class="max-w-xl card">
+  <form method="post">{% csrf_token %}
+    {% for field in courseForm %}
+    <div class="mb-4">
+      <label class="block text-sm font-semibold text-gray-700 mb-1">{{ field.label }}</label>
+      {{ field }}{% if field.errors %}<p class="text-red-500 text-xs mt-1">{{ field.errors.0 }}</p>{% endif %}
+    </div>
+    {% endfor %}
+    <div class="flex gap-3">
+      <button type="submit" class="btn-primary">Update Exam</button>
+      <a href="{% url 'teacher-view-exam' %}" class="btn-secondary">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

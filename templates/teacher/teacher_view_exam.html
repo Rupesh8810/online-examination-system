@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block title %}View Exams{% endblock %}
+{% block sidebar %}{% include 'teacher/teacher_sidebar.html' %}{% endblock %}
+{% block page_title %}Exam List{% endblock %}
+{% block content %}
+<div class="flex justify-between items-center mb-4">
+  <p class="text-gray-500 text-sm">{{ courses|length }} exam(s)</p>
+  <a href="{% url 'teacher-add-exam' %}" class="btn-primary">+ Create Exam</a>
+</div>
+<div class="space-y-3">
+{% for c in courses %}
+<div class="card hover:shadow-md transition border-l-4 {% if c.is_active %}border-l-emerald-400{% else %}border-l-gray-300{% endif %}">
+  <div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
+    <div class="flex-1">
+      <div class="flex items-center gap-2 mb-1">
+        <h3 class="font-bold text-gray-800">{{ c.course_name }}</h3>
+        {% if c.is_active %}<span class="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-semibold">Active</span>
+        {% else %}<span class="text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full">Inactive</span>{% endif %}
+      </div>
+      <p class="text-xs text-gray-500">
+        📚 {{ c.subject.name|default:"No subject" }} &nbsp;·&nbsp;
+        ❓ {{ c.q_count|default:"0" }} questions &nbsp;·&nbsp;
+        ⏱️ {{ c.duration_minutes }} min &nbsp;·&nbsp;
+        🔁 Max {{ c.max_attempts }} attempt(s)
+      </p>
+      {% if c.start_time %}<p class="text-xs text-blue-600 mt-1">🕐 {{ c.time_slot_display }}</p>{% endif %}
+    </div>
+    <div class="flex flex-wrap gap-2">
+      <a href="{% url 'teacher-edit-exam' c.id %}" class="btn-secondary text-xs py-1">Edit</a>
+      <a href="{% url 'teacher-upload-quiz' c.id %}" class="btn-secondary text-xs py-1">Upload Quiz</a>
+      <a href="{% url 'teacher-upload-answer-key' c.id %}" class="btn-secondary text-xs py-1">Answer Key</a>
+      <a href="{% url 'see-question' c.id %}" class="btn-secondary text-xs py-1">Questions</a>
+      <a href="{% url 'delete-exam' c.id %}" class="btn-danger text-xs py-1" onclick="return confirm('Delete this exam?')">Delete</a>
+    </div>
+  </div>
+</div>
+{% empty %}
+<div class="card text-center py-12 text-gray-400">No exams yet. <a href="{% url 'teacher-add-exam' %}" class="text-emerald-600 hover:underline">Create one</a>.</div>
+{% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block title %}Teachers – BBDNIIT Admin{% endblock %}
+{% block sidebar %}{% include 'exam/admin_sidebar.html' %}{% endblock %}
+{% block page_title %}Teacher Management{% endblock %}
+{% block content %}
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+  <div class="card flex items-center gap-4">
+    <div class="w-12 h-12 bg-green-100 rounded-xl text-2xl flex items-center justify-center">✅</div>
+    <div><p class="text-2xl font-bold">{{ total_teacher }}</p><p class="text-xs text-gray-500">Active Teachers</p></div>
+  </div>
+  <div class="card flex items-center gap-4">
+    <div class="w-12 h-12 bg-yellow-100 rounded-xl text-2xl flex items-center justify-center">⏳</div>
+    <div><p class="text-2xl font-bold">{{ pending_teacher }}</p><p class="text-xs text-gray-500">Pending Approval</p></div>
+  </div>
+  <div class="card flex items-center gap-4">
+    <div class="w-12 h-12 bg-blue-100 rounded-xl text-2xl flex items-center justify-center">💰</div>
+    <div><p class="text-2xl font-bold">₹{{ salary|default:"0" }}</p><p class="text-xs text-gray-500">Total Salary</p></div>
+  </div>
+</div>
+<div class="flex gap-3">
+  <a href="{% url 'admin-view-teacher' %}" class="btn-primary">View All Teachers</a>
+  <a href="{% url 'admin-view-pending-teacher' %}" class="btn-secondary">Pending Approvals</a>
+  <a href="{% url 'admin-view-teacher-salary' %}" class="btn-secondary">Salary View</a>
+</div>
+{% endblock %}

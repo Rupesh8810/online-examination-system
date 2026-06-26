@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %}Upload Answer Key{% endblock %}
+{% block sidebar %}{% include 'teacher/teacher_sidebar.html' %}{% endblock %}
+{% block page_title %}Upload Answer Key – {{ course.course_name }}{% endblock %}
+{% block content %}
+<div class="max-w-md card">
+  <form method="post" enctype="multipart/form-data">{% csrf_token %}
+    <div class="mb-4">
+      <label class="block text-sm font-semibold text-gray-700 mb-1">Answer Key File</label>
+      <input type="file" name="answer_key_file" required class="block w-full text-sm text-gray-600 border border-gray-300 rounded-lg px-3 py-2"/>
+    </div>
+    <div class="flex gap-3">
+      <button type="submit" class="btn-primary">Upload Answer Key</button>
+      <a href="{% url 'teacher-view-exam' %}" class="btn-secondary">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

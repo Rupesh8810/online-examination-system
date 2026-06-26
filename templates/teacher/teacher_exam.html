@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block title %}Exam Management{% endblock %}
+{% block sidebar %}{% include 'teacher/teacher_sidebar.html' %}{% endblock %}
+{% block page_title %}Exam Management{% endblock %}
+{% block content %}
+<div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+  <a href="{% url 'teacher-add-exam' %}" class="card hover:shadow-md transition text-center p-6 border-2 hover:border-emerald-300">
+    <div class="text-3xl mb-2">➕</div><p class="font-semibold">Create Exam</p></a>
+  <a href="{% url 'teacher-view-exam' %}" class="card hover:shadow-md transition text-center p-6 border-2 hover:border-emerald-300">
+    <div class="text-3xl mb-2">📋</div><p class="font-semibold">View Exams</p></a>
+  <a href="{% url 'teacher-add-question' %}" class="card hover:shadow-md transition text-center p-6 border-2 hover:border-emerald-300">
+    <div class="text-3xl mb-2">✏️</div><p class="font-semibold">Add Question</p></a>
+</div>
+{% endblock %}

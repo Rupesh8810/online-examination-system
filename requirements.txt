@@ -1,0 +1,10 @@
+Django>=4.2,<5.0
+Pillow>=10.0
+django-widget-tweaks>=1.5
+gunicorn>=21.0
+whitenoise>=6.6
+psycopg2-binary>=2.9
+python-dotenv>=1.0
+# Optional — uncomment for PDF/DOCX question import
+# pdfplumber>=0.10
+# python-docx>=1.0

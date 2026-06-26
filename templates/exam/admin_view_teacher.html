@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block title %}View Teachers{% endblock %}
+{% block sidebar %}{% include 'exam/admin_sidebar.html' %}{% endblock %}
+{% block page_title %}All Teachers{% endblock %}
+{% block content %}
+<div class="card overflow-x-auto">
+  <table class="w-full text-sm">
+    <thead><tr class="text-left text-gray-500 border-b">
+      <th class="pb-3">Name</th><th class="pb-3">Username</th><th class="pb-3">Mobile</th><th class="pb-3">Address</th><th class="pb-3">Salary</th><th class="pb-3">Actions</th>
+    </tr></thead>
+    <tbody class="divide-y divide-gray-50">
+    {% for t in teachers %}
+    <tr class="hover:bg-gray-50">
+      <td class="py-3 font-medium">{{ t.get_name }}</td>
+      <td class="py-3 text-gray-500">{{ t.user.username }}</td>
+      <td class="py-3">{{ t.mobile }}</td>
+      <td class="py-3">{{ t.address }}</td>
+      <td class="py-3">₹{{ t.salary|default:"—" }}</td>
+      <td class="py-3 flex gap-2">
+        <a href="{% url 'update-teacher' t.id %}" class="btn-secondary text-xs py-1">Edit</a>
+        <a href="{% url 'delete-teacher' t.id %}" class="btn-danger text-xs py-1" onclick="return confirm('Delete?')">Delete</a>
+      </td>
+    </tr>
+    {% empty %}<tr><td colspan="6" class="py-8 text-center text-gray-400">No teachers found.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

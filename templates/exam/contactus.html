@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %}Contact – BBDNIIT{% endblock %}
+{% block page_title %}Contact Us{% endblock %}
+{% block content %}
+<div class="max-w-lg mx-auto card">
+  <h2 class="text-xl font-bold mb-6">Send us a message</h2>
+  <form method="post">{% csrf_token %}
+    {% for field in form %}
+    <div class="mb-4">
+      <label class="block text-sm font-semibold text-gray-700 mb-1">{{ field.label }}</label>
+      {{ field }}
+      {% if field.errors %}<p class="text-red-500 text-xs mt-1">{{ field.errors.0 }}</p>{% endif %}
+    </div>
+    {% endfor %}
+    <button type="submit" class="btn-primary w-full justify-center">Send Message</button>
+  </form>
+</div>
+{% endblock %}

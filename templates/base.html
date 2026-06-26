@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{% block title %}BBDNIIT – Online Examination{% endblock %}</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary:  { DEFAULT:'#1e40af', light:'#3b82f6', dark:'#1e3a8a' },
+            accent:   '#f59e0b',
+            success:  '#10b981',
+            danger:   '#ef4444',
+            warning:  '#f97316',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .form-input { display:block;width:100%;border-radius:.5rem;border:1px solid #d1d5db;padding:.5rem .75rem;font-size:.875rem;outline:none;transition:border-color .15s; }
+    .form-input:focus { border-color:#3b82f6;box-shadow:0 0 0 1px #3b82f6; }
+    .btn-primary { display:inline-flex;align-items:center;gap:.5rem;border-radius:.5rem;background:#1d4ed8;padding:.5rem 1rem;font-size:.875rem;font-weight:600;color:#fff;cursor:pointer;transition:background .15s;text-decoration:none; }
+    .btn-primary:hover { background:#1e40af; }
+    .btn-danger { display:inline-flex;align-items:center;gap:.5rem;border-radius:.5rem;background:#dc2626;padding:.5rem 1rem;font-size:.875rem;font-weight:600;color:#fff;cursor:pointer;transition:background .15s;text-decoration:none; }
+    .btn-danger:hover { background:#b91c1c; }
+    .btn-success { display:inline-flex;align-items:center;gap:.5rem;border-radius:.5rem;background:#059669;padding:.5rem 1rem;font-size:.875rem;font-weight:600;color:#fff;cursor:pointer;transition:background .15s;text-decoration:none; }
+    .btn-success:hover { background:#047857; }
+    .btn-secondary { display:inline-flex;align-items:center;gap:.5rem;border-radius:.5rem;background:#e5e7eb;padding:.5rem 1rem;font-size:.875rem;font-weight:600;color:#374151;cursor:pointer;transition:background .15s;text-decoration:none; }
+    .btn-secondary:hover { background:#d1d5db; }
+    .card { background:#fff;border-radius:1rem;box-shadow:0 1px 3px rgba(0,0,0,.07);border:1px solid #f3f4f6;padding:1.5rem; }
+    .sidebar-link { display:flex;align-items:center;gap:.75rem;border-radius:.75rem;padding:.625rem 1rem;font-size:.875rem;font-weight:500;color:#bfdbfe;text-decoration:none;transition:background .15s; }
+    .sidebar-link:hover,.sidebar-link.active { background:rgba(255,255,255,.15);color:#fff; }
+  </style>
+  {% block extra_head %}{% endblock %}
+</head>
+<body class="h-full bg-gray-50 font-sans text-gray-800">
+
+<!-- Toast messages -->
+{% if messages %}
+<div id="toast-container" class="fixed top-4 right-4 z-50 flex flex-col gap-2 w-80">
+  {% for msg in messages %}
+  <div class="toast-msg flex items-start gap-3 rounded-xl p-4 shadow-lg border
+    {% if msg.tags == 'success' %}bg-emerald-50 border-emerald-200 text-emerald-800
+    {% elif msg.tags == 'error' %}bg-red-50 border-red-200 text-red-800
+    {% elif msg.tags == 'warning' %}bg-amber-50 border-amber-200 text-amber-800
+    {% else %}bg-blue-50 border-blue-200 text-blue-800{% endif %}">
+    <span class="text-lg">
+      {% if msg.tags == 'success' %}✅{% elif msg.tags == 'error' %}❌{% elif msg.tags == 'warning' %}⚠️{% else %}ℹ️{% endif %}
+    </span>
+    <p class="text-sm flex-1">{{ msg }}</p>
+    <button onclick="this.parentElement.remove()" class="text-gray-400 hover:text-gray-600 text-lg leading-none">&times;</button>
+  </div>
+  {% endfor %}
+</div>
+<script>
+  setTimeout(()=>{document.querySelectorAll('.toast-msg').forEach(el=>el.remove())},5000);
+</script>
+{% endif %}
+
+{% block body %}
+<div class="flex h-full min-h-screen">
+
+  <!-- Sidebar -->
+  {% block sidebar %}{% endblock %}
+
+  <!-- Main content -->
+  <div class="flex-1 flex flex-col min-w-0">
+    <!-- Top navbar -->
+    <header class="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between sticky top-0 z-30 shadow-sm">
+      <div class="flex items-center gap-3">
+        {% block page_icon %}<span class="text-2xl">🎓</span>{% endblock %}
+        <div>
+          <h1 class="text-lg font-bold text-gray-800">{% block page_title %}Dashboard{% endblock %}</h1>
+          <p class="text-xs text-gray-500">{% block page_subtitle %}BBDNIIT Online Examination Platform{% endblock %}</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-4">
+        {% if request.user.is_authenticated %}
+        <span class="text-sm text-gray-600 hidden sm:block">👤 {{ request.user.get_full_name|default:request.user.username }}</span>
+        <a href="{% url 'logout' %}" class="btn-secondary text-xs py-1.5 px-3">Logout</a>
+        {% endif %}
+      </div>
+    </header>
+
+    <!-- Content area -->
+    <main class="flex-1 p-6 overflow-auto">
+      {% block content %}{% endblock %}
+    </main>
+
+    <footer class="text-center text-xs text-gray-400 py-3 border-t border-gray-100">
+      © {% now "Y" %} BBDNIIT – Online Examination Platform &nbsp;|&nbsp; All rights reserved
+    </footer>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}{% endblock %}
+</body>
+</html>

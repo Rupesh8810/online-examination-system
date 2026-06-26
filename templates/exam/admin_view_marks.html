@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %}View Marks{% endblock %}
+{% block sidebar %}{% include 'exam/admin_sidebar.html' %}{% endblock %}
+{% block page_title %}Select Exam{% endblock %}
+{% block content %}
+<div class="card">
+  <p class="text-gray-600 mb-4">Select an exam to view this student's marks:</p>
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+  {% for c in courses %}
+    <a href="{% url 'admin-check-marks' c.id %}" class="border rounded-xl p-4 hover:border-blue-400 hover:bg-blue-50 transition">
+      <p class="font-semibold text-gray-800">{{ c.course_name }}</p>
+      <p class="text-xs text-gray-500 mt-1">{{ c.question_number }} questions · {{ c.total_marks }} marks</p>
+    </a>
+  {% empty %}<p class="text-gray-400">No exams configured.</p>
+  {% endfor %}
+  </div>
+</div>
+{% endblock %}

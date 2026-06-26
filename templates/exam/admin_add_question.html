@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %}Add Question{% endblock %}
+{% block sidebar %}{% include 'exam/admin_sidebar.html' %}{% endblock %}
+{% block page_title %}Add Question{% endblock %}
+{% block content %}
+<div class="max-w-xl card">
+  <form method="post">{% csrf_token %}
+    <div class="mb-4">
+      <label class="block text-sm font-semibold text-gray-700 mb-1">Select Exam</label>
+      <select name="courseID" class="block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 outline-none">
+        {% for c in courses %}<option value="{{ c.id }}">{{ c.course_name }}</option>{% endfor %}
+      </select>
+    </div>
+    {% for field in questionForm %}
+    <div class="mb-4">
+      <label class="block text-sm font-semibold text-gray-700 mb-1">{{ field.label }}</label>
+      {{ field }}{% if field.errors %}<p class="text-red-500 text-xs mt-1">{{ field.errors.0 }}</p>{% endif %}
+    </div>
+    {% endfor %}
+    <div class="flex gap-3">
+      <button type="submit" class="btn-primary">Save Question</button>
+      <a href="{% url 'admin-view-question' %}" class="btn-secondary">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

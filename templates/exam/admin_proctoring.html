@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}Proctoring Alerts{% endblock %}
+{% block sidebar %}{% include 'exam/admin_sidebar.html' %}{% endblock %}
+{% block page_title %}Proctoring Alerts{% endblock %}
+{% block content %}
+<div class="card overflow-x-auto">
+  <table class="w-full text-sm">
+    <thead><tr class="text-left text-gray-500 border-b">
+      <th class="pb-3">Student</th><th class="pb-3">Alert Type</th><th class="pb-3">Exam</th><th class="pb-3">Time</th>
+    </tr></thead>
+    <tbody class="divide-y divide-gray-50">
+    {% for a in alerts %}
+    <tr class="hover:bg-gray-50">
+      <td class="py-2.5 font-medium">{{ a.student.get_name }}</td>
+      <td class="py-2.5">
+        <span class="inline-block px-2 py-0.5 rounded-full text-xs font-semibold
+          {% if a.alert_type == 'no_face' %}bg-red-100 text-red-700
+          {% elif a.alert_type == 'tab_switch' %}bg-orange-100 text-orange-700
+          {% else %}bg-yellow-100 text-yellow-700{% endif %}">
+          {{ a.get_alert_type_display }}
+        </span>
+      </td>
+      <td class="py-2.5 text-gray-500">{{ a.course.course_name|default:"—" }}</td>
+      <td class="py-2.5 text-gray-400">{{ a.timestamp|date:"d M H:i" }}</td>
+    </tr>
+    {% empty %}<tr><td colspan="4" class="py-8 text-center text-gray-400">No alerts recorded.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

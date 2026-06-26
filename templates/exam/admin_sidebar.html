@@ -1,0 +1,31 @@
+<aside class="w-64 bg-blue-900 flex flex-col flex-shrink-0 min-h-screen">
+  <div class="flex flex-col items-center py-6 px-4 border-b border-blue-800">
+    <div class="w-16 h-16 rounded-full bg-white/10 flex items-center justify-center text-3xl mb-2">🏛️</div>
+    <span class="text-white font-bold text-sm">BBDNIIT</span>
+    <span class="text-blue-300 text-xs mt-0.5">Admin Panel</span>
+  </div>
+  <nav class="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+    <a href="{% url 'admin-dashboard' %}" class="flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-medium text-blue-100 hover:bg-blue-700 hover:text-white transition">
+      <span>📊</span> Dashboard</a>
+    <p class="px-4 pt-4 pb-1 text-xs font-semibold uppercase tracking-wider text-blue-400">Academic</p>
+    <a href="{% url 'admin-view-course' %}" class="flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-medium text-blue-100 hover:bg-blue-700 hover:text-white transition">
+      <span>🎓</span> Courses</a>
+    <a href="{% url 'admin-view-subject' %}" class="flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-medium text-blue-100 hover:bg-blue-700 hover:text-white transition">
+      <span>📚</span> Subjects</a>
+    <a href="{% url 'admin-view-question' %}" class="flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-medium text-blue-100 hover:bg-blue-700 hover:text-white transition">
+      <span>❓</span> Questions</a>
+    <p class="px-4 pt-4 pb-1 text-xs font-semibold uppercase tracking-wider text-blue-400">People</p>
+    <a href="{% url 'admin-teacher' %}" class="flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-medium text-blue-100 hover:bg-blue-700 hover:text-white transition">
+      <span>👨‍🏫</span> Teachers</a>
+    <a href="{% url 'admin-student' %}" class="flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-medium text-blue-100 hover:bg-blue-700 hover:text-white transition">
+      <span>👩‍🎓</span> Students</a>
+    <p class="px-4 pt-4 pb-1 text-xs font-semibold uppercase tracking-wider text-blue-400">Reports</p>
+    <a href="{% url 'admin-view-student-marks' %}" class="flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-medium text-blue-100 hover:bg-blue-700 hover:text-white transition">
+      <span>📈</span> Results</a>
+    <a href="{% url 'admin-proctoring' %}" class="flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-medium text-blue-100 hover:bg-blue-700 hover:text-white transition">
+      <span>🔍</span> Proctoring</a>
+  </nav>
+  <div class="px-4 py-4 border-t border-blue-800">
+    <a href="{% url 'logout' %}" class="flex items-center gap-2 text-blue-300 hover:text-white text-sm transition"><span>🚪</span> Logout</a>
+  </div>
+</aside>

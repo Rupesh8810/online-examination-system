@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}Pending Teachers{% endblock %}
+{% block sidebar %}{% include 'exam/admin_sidebar.html' %}{% endblock %}
+{% block page_title %}Pending Teacher Approvals{% endblock %}
+{% block content %}
+<div class="card overflow-x-auto">
+  <table class="w-full text-sm">
+    <thead><tr class="text-left text-gray-500 border-b">
+      <th class="pb-3">Name</th><th class="pb-3">Username</th><th class="pb-3">Mobile</th><th class="pb-3">Actions</th>
+    </tr></thead>
+    <tbody class="divide-y divide-gray-50">
+    {% for t in teachers %}
+    <tr class="hover:bg-gray-50">
+      <td class="py-3 font-medium">{{ t.get_name }}</td>
+      <td class="py-3 text-gray-500">{{ t.user.username }}</td>
+      <td class="py-3">{{ t.mobile }}</td>
+      <td class="py-3 flex gap-2">
+        <a href="{% url 'approve-teacher' t.id %}" class="btn-success text-xs py-1">Approve</a>
+        <a href="{% url 'reject-teacher' t.id %}" class="btn-danger text-xs py-1" onclick="return confirm('Reject?')">Reject</a>
+      </td>
+    </tr>
+    {% empty %}<tr><td colspan="4" class="py-8 text-center text-gray-400">No pending teachers.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

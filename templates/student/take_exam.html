@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% block title %}Exam Instructions – {{ course.course_name }}{% endblock %}
+{% block sidebar %}{% include 'student/student_sidebar.html' %}{% endblock %}
+{% block page_title %}Exam Instructions{% endblock %}
+{% block content %}
+
+<!-- Watermark -->
+<div class="fixed inset-0 pointer-events-none z-0 flex items-center justify-center opacity-5 select-none" aria-hidden="true">
+  <p class="text-gray-700 font-bold text-6xl rotate-[-35deg] whitespace-nowrap tracking-widest">Online Examination – BBDNIIT</p>
+</div>
+
+<div class="max-w-2xl mx-auto relative z-10">
+  <!-- Header card -->
+  <div class="bg-gradient-to-r from-blue-700 to-blue-800 rounded-2xl p-6 text-white mb-6 shadow-lg">
+    <div class="flex items-center gap-4">
+      <div class="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center text-3xl flex-shrink-0">📝</div>
+      <div>
+        <p class="text-blue-200 text-xs font-semibold uppercase tracking-wider mb-0.5">
+          {{ course.subject.academic_course.name|default:"BBDNIIT" }}
+          {% if course.subject %} › {{ course.subject.name }}{% endif %}
+        </p>
+        <h1 class="text-2xl font-bold">{{ course.course_name }}</h1>
+        <p class="text-blue-200 text-sm mt-0.5">Online Examination – BBDNIIT</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Exam info grid -->
+  <div class="grid grid-cols-2 md:grid-cols-3 gap-3 mb-6">
+    <div class="card text-center py-4">
+      <p class="text-2xl font-bold text-blue-700">{{ total_questions }}</p>
+      <p class="text-xs text-gray-500 mt-0.5">Total Questions</p>
+    </div>
+    <div class="card text-center py-4">
+      <p class="text-2xl font-bold text-blue-700">{{ total_marks }}</p>
+      <p class="text-xs text-gray-500 mt-0.5">Total Marks</p>
+    </div>
+    <div class="card text-center py-4">
+      <p class="text-2xl font-bold text-blue-700">{{ course.duration_minutes }}</p>
+      <p class="text-xs text-gray-500 mt-0.5">Minutes</p>
+    </div>
+    <div class="card text-center py-4">
+      <p class="text-2xl font-bold text-blue-700">{{ course.max_attempts }}</p>
+      <p class="text-xs text-gray-500 mt-0.5">Max Attempts</p>
+    </div>
+    <div class="card text-center py-4">
+      <p class="text-2xl font-bold text-blue-700">{{ attempt_count }}</p>
+      <p class="text-xs text-gray-500 mt-0.5">Your Attempts</p>
+    </div>
+    <div class="card text-center py-4">
+      <p class="text-lg font-bold text-blue-700">
+        {% if course.start_time %}{{ course.start_time|date:"H:i" }}{% else %}Open{% endif %}
+      </p>
+      <p class="text-xs text-gray-500 mt-0.5">
+        {% if course.end_time %}Ends {{ course.end_time|date:"H:i" }}{% else %}No window{% endif %}
+      </p>
+    </div>
+  </div>
+
+  <!-- Instructions -->
+  <div class="card mb-6 border-l-4 border-l-amber-400">
+    <h2 class="font-bold text-gray-800 mb-3 flex items-center gap-2">⚠️ Important Instructions</h2>
+    <ul class="space-y-2 text-sm text-gray-600">
+      <li class="flex items-start gap-2"><span class="text-amber-500 font-bold flex-shrink-0">1.</span> Once you start, the timer cannot be paused.</li>
+      <li class="flex items-start gap-2"><span class="text-amber-500 font-bold flex-shrink-0">2.</span> Do <strong>NOT</strong> switch tabs or windows during the exam — you will be auto-submitted after 4 violations.</li>
+      <li class="flex items-start gap-2"><span class="text-amber-500 font-bold flex-shrink-0">3.</span> Keep your face visible to the camera at all times. Missing face > 4 times = auto submit.</li>
+      <li class="flex items-start gap-2"><span class="text-amber-500 font-bold flex-shrink-0">4.</span> All violations are recorded and reported to the teacher.</li>
+      <li class="flex items-start gap-2"><span class="text-amber-500 font-bold flex-shrink-0">5.</span> You may attempt this exam <strong>{{ course.max_attempts }} time(s)</strong>. You have attempted <strong>{{ attempt_count }}</strong> time(s).</li>
+      <li class="flex items-start gap-2"><span class="text-amber-500 font-bold flex-shrink-0">6.</span> Ensure stable internet connectivity before starting.</li>
+    </ul>
+  </div>
+
+  <div class="flex gap-4">
+    <a href="{% url 'start-exam' course.id %}"
+       class="flex-1 bg-blue-700 hover:bg-blue-800 active:scale-95 text-white font-bold py-3.5 rounded-2xl text-center transition shadow-lg shadow-blue-200">
+      🚀 Start Exam
+    </a>
+    <a href="{% url 'student-exam' %}" class="btn-secondary py-3.5 px-6">← Back</a>
+  </div>
+</div>
+{% endblock %}

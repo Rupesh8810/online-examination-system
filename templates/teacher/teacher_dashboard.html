@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% block title %}Teacher Dashboard – BBDNIIT{% endblock %}
+{% block sidebar %}{% include 'teacher/teacher_sidebar.html' %}{% endblock %}
+{% block page_icon %}👨‍🏫{% endblock %}
+{% block page_title %}Teacher Dashboard{% endblock %}
+{% block content %}
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+  <div class="card flex items-center gap-4"><div class="w-12 h-12 bg-blue-100 rounded-xl text-2xl flex items-center justify-center">📝</div>
+    <div><p class="text-2xl font-bold">{{ total_course }}</p><p class="text-xs text-gray-500">Exams</p></div></div>
+  <div class="card flex items-center gap-4"><div class="w-12 h-12 bg-purple-100 rounded-xl text-2xl flex items-center justify-center">❓</div>
+    <div><p class="text-2xl font-bold">{{ total_question }}</p><p class="text-xs text-gray-500">Questions</p></div></div>
+  <div class="card flex items-center gap-4"><div class="w-12 h-12 bg-amber-100 rounded-xl text-2xl flex items-center justify-center">👩‍🎓</div>
+    <div><p class="text-2xl font-bold">{{ total_student }}</p><p class="text-xs text-gray-500">Students</p></div></div>
+  <div class="card flex items-center gap-4"><div class="w-12 h-12 bg-green-100 rounded-xl text-2xl flex items-center justify-center">📚</div>
+    <div><p class="text-2xl font-bold">{{ total_subjects }}</p><p class="text-xs text-gray-500">Subjects</p></div></div>
+</div>
+
+<div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
+  <a href="{% url 'teacher-add-exam' %}" class="card hover:shadow-md transition text-center p-4 border-2 hover:border-emerald-300">
+    <div class="text-2xl mb-1">➕</div><p class="text-sm font-semibold">Create Exam</p></a>
+  <a href="{% url 'teacher-add-question' %}" class="card hover:shadow-md transition text-center p-4 border-2 hover:border-emerald-300">
+    <div class="text-2xl mb-1">✏️</div><p class="text-sm font-semibold">Add Question</p></a>
+  <a href="{% url 'teacher-view-results' %}" class="card hover:shadow-md transition text-center p-4 border-2 hover:border-emerald-300">
+    <div class="text-2xl mb-1">📈</div><p class="text-sm font-semibold">View Results</p></a>
+  <a href="{% url 'teacher-proctoring' %}" class="card hover:shadow-md transition text-center p-4 border-2 hover:border-emerald-300">
+    <div class="text-2xl mb-1">🔍</div><p class="text-sm font-semibold">Proctoring</p></a>
+</div>
+
+{% if recent_exams %}
+<div class="card">
+  <h2 class="font-bold text-gray-700 mb-4">📋 Recent Exams</h2>
+  <div class="space-y-2">
+  {% for e in recent_exams %}
+  <div class="flex items-center justify-between p-3 rounded-xl bg-gray-50 border hover:border-emerald-300 transition">
+    <div>
+      <p class="font-semibold text-gray-800">{{ e.course_name }}</p>
+      <p class="text-xs text-gray-500">{{ e.subject.name|default:"No subject" }} · {{ e.duration_minutes }} min · {{ e.question_number }} questions</p>
+    </div>
+    <div class="flex gap-2">
+      <a href="{% url 'teacher-edit-exam' e.id %}" class="btn-secondary text-xs py-1">Edit</a>
+      <a href="{% url 'see-question' e.id %}" class="btn-secondary text-xs py-1">Questions</a>
+    </div>
+  </div>
+  {% endfor %}
+  </div>
+</div>
+{% endif %}
+{% endblock %}

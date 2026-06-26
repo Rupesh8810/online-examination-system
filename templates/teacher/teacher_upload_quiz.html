@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block title %}Upload Quiz{% endblock %}
+{% block sidebar %}{% include 'teacher/teacher_sidebar.html' %}{% endblock %}
+{% block page_title %}Upload Quiz File – {{ course.course_name }}{% endblock %}
+{% block content %}
+<div class="max-w-xl space-y-4">
+  <div class="card">
+    <h3 class="font-semibold text-gray-700 mb-3">📁 Upload Quiz / Answer Key</h3>
+    <form method="post" enctype="multipart/form-data">{% csrf_token %}
+      {% for field in uploadForm %}
+      <div class="mb-4">
+        <label class="block text-sm font-semibold text-gray-700 mb-1">{{ field.label }}</label>
+        {{ field }}
+        {% if field.errors %}<p class="text-red-500 text-xs mt-1">{{ field.errors.0 }}</p>{% endif %}
+      </div>
+      {% endfor %}
+      <button type="submit" class="btn-primary">Upload</button>
+    </form>
+  </div>
+  {% if parse_result %}
+  <div class="card bg-green-50 border border-green-200">
+    <p class="text-green-800 font-semibold">✅ Import Result</p>
+    <p class="text-sm text-green-700">{{ parse_result.saved }} questions imported · {{ parse_result.skipped }} skipped</p>
+    {% if parse_result.errors %}<ul class="text-xs text-red-600 mt-2">{% for e in parse_result.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+  </div>
+  {% endif %}
+  <div class="card bg-blue-50 border border-blue-200">
+    <p class="font-semibold text-blue-800 mb-2">ℹ️ Supported Formats</p>
+    <ul class="text-sm text-blue-700 space-y-1">
+      <li>📄 <strong>CSV/JSON</strong> – Auto-imported as questions</li>
+      <li>📕 <strong>PDF/DOCX</strong> – Saved for future AI parsing</li>
+    </ul>
+    <p class="text-xs text-blue-500 mt-2">CSV headers: question, option1, option2, option3, option4, answer, marks</p>
+  </div>
+</div>
+{% endblock %}

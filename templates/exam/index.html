@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>BBDNIIT – Online Examination Platform</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-indigo-900 flex flex-col">
+
+  <!-- Header -->
+  <header class="px-8 py-5 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center text-2xl">🏛️</div>
+      <div>
+        <span class="text-white font-bold text-lg block leading-none">BBDNIIT</span>
+        <span class="text-blue-200 text-xs">Online Examination Platform</span>
+      </div>
+    </div>
+    <nav class="flex gap-3">
+      <a href="{% url 'adminlogin' %}" class="px-4 py-2 rounded-lg bg-white/10 text-white text-sm hover:bg-white/20 transition">Admin</a>
+    </nav>
+  </header>
+
+  <!-- Hero -->
+  <main class="flex-1 flex flex-col items-center justify-center px-6 text-center">
+    <div class="max-w-2xl">
+      <span class="inline-block bg-blue-500/30 text-blue-200 text-xs font-semibold px-4 py-1.5 rounded-full mb-6 uppercase tracking-wider">
+        College-Level Examination System
+      </span>
+      <h1 class="text-5xl md:text-6xl font-extrabold text-white leading-tight mb-4">
+        Online Exam<br/><span class="text-amber-400">Platform</span>
+      </h1>
+      <p class="text-blue-200 text-lg mb-10 leading-relaxed">
+        Secure, AI-proctored, timed examinations for students and teachers.<br/>
+        Built for BBDNIIT – supporting 100–200 concurrent students.
+      </p>
+
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="{% url 'studentclick' %}"
+           class="group bg-amber-500 hover:bg-amber-400 text-white font-bold px-8 py-4 rounded-2xl text-lg shadow-xl transition-all hover:scale-105">
+          👩‍🎓 Student Login
+        </a>
+        <a href="{% url 'teacherclick' %}"
+           class="group bg-white/15 hover:bg-white/25 text-white font-bold px-8 py-4 rounded-2xl text-lg border border-white/30 transition-all hover:scale-105">
+          👨‍🏫 Teacher Login
+        </a>
+      </div>
+    </div>
+
+    <!-- Feature cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-16 max-w-3xl w-full">
+      {% for icon, title, desc in features %}
+      <div class="bg-white/10 backdrop-blur rounded-2xl p-5 text-left border border-white/10">
+        <span class="text-3xl block mb-2">{{ icon }}</span>
+        <h3 class="text-white font-semibold mb-1">{{ title }}</h3>
+        <p class="text-blue-200 text-sm">{{ desc }}</p>
+      </div>
+      {% empty %}
+      <div class="bg-white/10 backdrop-blur rounded-2xl p-5 text-left border border-white/10">
+        <span class="text-3xl block mb-2">🔒</span>
+        <h3 class="text-white font-semibold mb-1">AI Proctoring</h3>
+        <p class="text-blue-200 text-sm">Face detection, tab monitoring, auto-submit on violations.</p>
+      </div>
+      <div class="bg-white/10 backdrop-blur rounded-2xl p-5 text-left border border-white/10">
+        <span class="text-3xl block mb-2">⏱️</span>
+        <h3 class="text-white font-semibold mb-1">Timed Exams</h3>
+        <p class="text-blue-200 text-sm">Configurable countdown timer with auto-submit on expiry.</p>
+      </div>
+      <div class="bg-white/10 backdrop-blur rounded-2xl p-5 text-left border border-white/10">
+        <span class="text-3xl block mb-2">📊</span>
+        <h3 class="text-white font-semibold mb-1">Instant Results</h3>
+        <p class="text-blue-200 text-sm">Automatic evaluation with grade, percentage and analytics.</p>
+      </div>
+      {% endfor %}
+    </div>
+  </main>
+
+  <footer class="text-center text-blue-400 text-xs py-5">
+    © {% now "Y" %} BBDNIIT – Online Examination Platform
+  </footer>
+
+</body>
+</html>

@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block title %}Edit Student{% endblock %}
+{% block sidebar %}{% include 'exam/admin_sidebar.html' %}{% endblock %}
+{% block page_title %}Edit Student{% endblock %}
+{% block content %}
+<div class="max-w-lg card">
+  <form method="post" enctype="multipart/form-data">{% csrf_token %}
+    {% for field in userForm %}<div class="mb-4"><label class="block text-sm font-semibold text-gray-700 mb-1">{{ field.label }}</label>{{ field }}</div>{% endfor %}
+    {% for field in studentForm %}<div class="mb-4"><label class="block text-sm font-semibold text-gray-700 mb-1">{{ field.label }}</label>{{ field }}</div>{% endfor %}
+    <button type="submit" class="btn-primary">Update Student</button>
+  </form>
+</div>
+{% endblock %}

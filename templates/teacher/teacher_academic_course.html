@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %}Programmes{% endblock %}
+{% block sidebar %}{% include 'teacher/teacher_sidebar.html' %}{% endblock %}
+{% block page_title %}Academic Programmes{% endblock %}
+{% block content %}
+<div class="flex justify-between items-center mb-4">
+  <p class="text-gray-500 text-sm">{{ courses|length }} programme(s)</p>
+  <a href="{% url 'teacher-add-academic-course' %}" class="btn-primary">+ Add Programme</a>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+{% for c in courses %}
+<div class="card border-2 border-transparent hover:border-emerald-200 transition">
+  <div class="flex justify-between items-start mb-2">
+    <span class="inline-block bg-emerald-100 text-emerald-700 text-xs font-bold px-2 py-0.5 rounded">{{ c.code }}</span>
+    <a href="{% url 'teacher-delete-academic-course' c.id %}" class="text-red-400 hover:text-red-600 text-xs" onclick="return confirm('Delete?')">🗑️</a>
+  </div>
+  <h3 class="font-bold text-gray-800">{{ c.name }}</h3>
+  <p class="text-xs text-gray-500 mt-1">{{ c.sub_count }} subject(s)</p>
+</div>
+{% empty %}<div class="col-span-3 card text-center py-12 text-gray-400">No programmes yet.</div>
+{% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %}Set Salary{% endblock %}
+{% block sidebar %}{% include 'exam/admin_sidebar.html' %}{% endblock %}
+{% block page_title %}Set Teacher Salary{% endblock %}
+{% block content %}
+<div class="max-w-md card">
+  <form method="post">{% csrf_token %}
+    <div class="mb-4">
+      <label class="block text-sm font-semibold text-gray-700 mb-1">Monthly Salary (₹)</label>
+      {{ teacherSalary.salary }}
+    </div>
+    <button type="submit" class="btn-primary">Approve Teacher</button>
+  </form>
+</div>
+{% endblock %}

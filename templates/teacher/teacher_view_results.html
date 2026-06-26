@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block title %}Results{% endblock %}
+{% block sidebar %}{% include 'teacher/teacher_sidebar.html' %}{% endblock %}
+{% block page_title %}Exam Results{% endblock %}
+{% block content %}
+<div class="card overflow-x-auto">
+  <table class="w-full text-sm">
+    <thead><tr class="text-left text-gray-500 border-b">
+      <th class="pb-3">Student</th><th class="pb-3">Exam</th><th class="pb-3">Marks</th><th class="pb-3">%</th><th class="pb-3">Grade</th><th class="pb-3">Tab SW</th><th class="pb-3">Face Miss</th><th class="pb-3">Auto</th><th class="pb-3">Date</th>
+    </tr></thead>
+    <tbody class="divide-y divide-gray-50">
+    {% for r in results %}
+    <tr class="hover:bg-gray-50">
+      <td class="py-2.5 font-medium">{{ r.student.get_name }}</td>
+      <td class="py-2.5">{{ r.exam.course_name }}</td>
+      <td class="py-2.5 font-semibold">{{ r.marks }}/{{ r.total_marks }}</td>
+      <td class="py-2.5">{{ r.percentage }}%</td>
+      <td class="py-2.5"><span class="inline-block px-2 py-0.5 rounded-full text-xs font-bold
+        {% if r.grade == 'A+' or r.grade == 'A' %}bg-green-100 text-green-700
+        {% elif r.grade == 'B' %}bg-blue-100 text-blue-700
+        {% elif r.grade == 'F' %}bg-red-100 text-red-700
+        {% else %}bg-yellow-100 text-yellow-700{% endif %}">{{ r.grade }}</span></td>
+      <td class="py-2.5 {% if r.tab_switch_count > 3 %}text-red-600 font-semibold{% endif %}">{{ r.tab_switch_count }}</td>
+      <td class="py-2.5 {% if r.face_missing_count > 3 %}text-red-600 font-semibold{% endif %}">{{ r.face_missing_count }}</td>
+      <td class="py-2.5">{% if r.auto_submitted %}<span class="text-xs bg-red-100 text-red-700 px-2 py-0.5 rounded">Auto</span>{% else %}—{% endif %}</td>
+      <td class="py-2.5 text-gray-400">{{ r.date|date:"d M Y" }}</td>
+    </tr>
+    {% empty %}<tr><td colspan="9" class="py-8 text-center text-gray-400">No results yet.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

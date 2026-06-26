@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block title %}View Questions{% endblock %}
+{% block sidebar %}{% include 'exam/admin_sidebar.html' %}{% endblock %}
+{% block page_title %}Question Bank{% endblock %}
+{% block content %}
+<div class="flex justify-between items-center mb-4">
+  <p class="text-gray-500 text-sm">Select an exam to view its questions</p>
+  <a href="{% url 'admin-add-question' %}" class="btn-primary">+ Add Question</a>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+{% for c in courses %}
+<a href="{% url 'view-question' c.id %}" class="card hover:shadow-md transition border-2 border-transparent hover:border-blue-200 block">
+  <p class="font-bold text-gray-800 mb-1">{{ c.course_name }}</p>
+  <p class="text-xs text-gray-500">{{ c.q_count|default:"0" }} questions · {{ c.total_marks }} total marks</p>
+</a>
+{% empty %}
+<div class="col-span-3 card text-center py-12 text-gray-400">No exams configured yet.</div>
+{% endfor %}
+</div>
+{% endblock %}

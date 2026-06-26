@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>{{ course.course_name }} – Exam | BBDNIIT</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body{user-select:none;-webkit-user-select:none;}
+    .opt-label{display:flex;align-items:center;gap:.75rem;border-radius:.75rem;border:2px solid #e5e7eb;
+      padding:.75rem 1rem;background:#fff;cursor:pointer;transition:all .15s;}
+    .opt-label:hover{border-color:#93c5fd;background:#eff6ff;}
+    .opt-label.selected{border-color:#3b82f6;background:#dbeafe;}
+    #watermark{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;
+      pointer-events:none;z-index:0;opacity:.04;user-select:none;}
+    #watermark span{font-size:4.5rem;font-weight:900;color:#1e3a8a;
+      transform:rotate(-35deg);white-space:nowrap;letter-spacing:.1em;}
+    .exam-wrap{position:relative;z-index:1;}
+    #cam-status{position:fixed;bottom:8px;right:8px;z-index:50;}
+  </style>
+</head>
+<body class="bg-gray-50 min-h-screen" oncontextmenu="return false">
+
+<div id="watermark" aria-hidden="true"><span>Online Examination – BBDNIIT</span></div>
+
+<!-- ── Fixed top bar ── -->
+<div class="fixed top-0 left-0 right-0 z-50 bg-blue-900 text-white px-4 py-2.5 flex items-center justify-between shadow-xl">
+  <div class="flex items-center gap-3 min-w-0">
+    <span class="font-bold truncate max-w-xs">📝 {{ course.course_name }}</span>
+    <span class="text-blue-300 text-xs hidden md:inline truncate">{{ course.subject.name|default:"" }}</span>
+  </div>
+  <div class="flex items-center gap-2 flex-shrink-0">
+    <div id="tab-badge" class="flex items-center gap-1 bg-white/10 rounded-lg px-2.5 py-1 text-sm">
+      🖥️ <strong id="tab-n">0</strong>/4
+    </div>
+    <div id="face-badge" class="flex items-center gap-1 bg-white/10 rounded-lg px-2.5 py-1 text-sm">
+      👤 <strong id="face-n">0</strong>/4
+    </div>
+    <div id="timer-pill" class="bg-amber-500 rounded-xl px-4 py-1.5 font-mono font-bold text-xl tracking-widest min-w-[5.5rem] text-center">
+      <span id="timer">{{ course.duration_minutes }}:00</span>
+    </div>
+  </div>
+</div>
+
+<!-- Toasts -->
+<div id="toasts" class="fixed top-16 right-3 z-50 w-72 space-y-2 pointer-events-none"></div>
+
+<!-- Camera preview + face indicator -->
+<div id="cam-status" class="hidden">
+  <div class="relative rounded-xl overflow-hidden border-2 border-white/40 shadow-xl" style="width:140px">
+    <video id="cam" width="140" height="105" autoplay muted playsinline class="block"></video>
+    <canvas id="cnv" width="140" height="105" class="absolute inset-0 pointer-events-none"></canvas>
+    <div id="face-ind" class="absolute bottom-1 left-1 right-1 text-center text-xs font-bold py-0.5 rounded" style="background:rgba(0,0,0,.5);color:#4ade80">
+      ✔ Face OK
+    </div>
+  </div>
+</div>
+
+<!-- ── Exam form ── -->
+<div class="exam-wrap pt-16 pb-28 px-4">
+  <div class="max-w-3xl mx-auto">
+    <form id="eform" method="post" action="{% url 'calculate-marks' %}">
+      {% csrf_token %}
+      <input type="hidden" name="session_token"      value="{{ session_token }}"/>
+      <input type="hidden" name="tab_switch_count"   id="h-tab"  value="0"/>
+      <input type="hidden" name="face_missing_count" id="h-face" value="0"/>
+      <input type="hidden" name="auto_submitted"     id="h-auto" value="false"/>
+
+      <div class="space-y-5">
+      {% for q in questions %}
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
+        <div class="flex items-start gap-3 mb-4">
+          <span class="w-8 h-8 flex-shrink-0 bg-blue-100 text-blue-700 rounded-full flex items-center justify-center text-sm font-bold">{{ forloop.counter }}</span>
+          <p class="font-semibold text-gray-800 leading-relaxed flex-1">{{ q.question }}</p>
+          <span class="flex-shrink-0 text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full">{{ q.marks }} mk</span>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+          <label class="opt-label" onclick="selectOpt(this,'{{ forloop.counter }}','Option1')">
+            <input type="radio" name="q{{ forloop.counter }}" value="Option1" class="accent-blue-600 w-4 h-4 flex-shrink-0"/>
+            <span>① {{ q.option1 }}</span>
+          </label>
+          <label class="opt-label" onclick="selectOpt(this,'{{ forloop.counter }}','Option2')">
+            <input type="radio" name="q{{ forloop.counter }}" value="Option2" class="accent-blue-600 w-4 h-4 flex-shrink-0"/>
+            <span>② {{ q.option2 }}</span>
+          </label>
+          <label class="opt-label" onclick="selectOpt(this,'{{ forloop.counter }}','Option3')">
+            <input type="radio" name="q{{ forloop.counter }}" value="Option3" class="accent-blue-600 w-4 h-4 flex-shrink-0"/>
+            <span>③ {{ q.option3 }}</span>
+          </label>
+          <label class="opt-label" onclick="selectOpt(this,'{{ forloop.counter }}','Option4')">
+            <input type="radio" name="q{{ forloop.counter }}" value="Option4" class="accent-blue-600 w-4 h-4 flex-shrink-0"/>
+            <span>④ {{ q.option4 }}</span>
+          </label>
+        </div>
+      </div>
+      {% endfor %}
+      </div>
+
+      <div class="mt-8 flex justify-center">
+        <button type="button" onclick="manualSubmit()"
+          class="bg-blue-700 hover:bg-blue-800 text-white font-bold px-12 py-4 rounded-2xl text-lg shadow-lg active:scale-95 transition">
+          ✅ Submit Exam
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════
+   CONFIG  (values injected by Django)
+═══════════════════════════════════════════════════════════ */
+const SECS         = {{ duration_seconds }};
+const COURSE_ID    = "{{ course.id }}";
+const SESSION_TOK  = "{{ session_token }}";
+const CSRF         = "{{ csrf_token }}";
+const MAX_TAB      = 4;
+const MAX_FACE     = 4;
+const LOG_URL      = "/student/log-proctoring-alert";
+const STATUS_URL   = "/student/session-status";
+
+let tabN=0, faceN=0, done=false, timeLeft=SECS;
+
+/* ── Option selection ── */
+function selectOpt(label, qNum, val){
+  const group = document.querySelectorAll(`input[name="q${qNum}"]`);
+  group.forEach(r=>{r.closest('.opt-label').classList.remove('selected');});
+  label.classList.add('selected');
+}
+
+/* ── Toast ── */
+function toast(msg, kind='warn'){
+  const z=document.getElementById('toasts');
+  const bg={warn:'#fefce8',danger:'#fef2f2',info:'#eff6ff'};
+  const bd={warn:'#fde68a',danger:'#fecaca',info:'#bfdbfe'};
+  const ic={warn:'⚠️',danger:'🚨',info:'ℹ️'};
+  const d=document.createElement('div');
+  d.style.cssText=`background:${bg[kind]||bg.warn};border:1px solid ${bd[kind]||bd.warn};
+    border-radius:.75rem;padding:.875rem 1rem;display:flex;gap:.625rem;align-items:flex-start;
+    box-shadow:0 4px 16px rgba(0,0,0,.12);font-size:.8125rem;pointer-events:all;`;
+  d.innerHTML=`<span style="font-size:1.1rem;flex-shrink:0">${ic[kind]||'⚠️'}</span>
+    <p style="flex:1;margin:0">${msg}</p>
+    <button onclick="this.parentElement.remove()"
+      style="color:#9ca3af;font-size:1.2rem;line-height:1;background:none;border:none;cursor:pointer;flex-shrink:0">&times;</button>`;
+  z.prepend(d);
+  setTimeout(()=>d.remove(),7000);
+}
+
+/* ── Sync counters to hidden fields and badges ── */
+function sync(serverTab, serverFace){
+  if(serverTab !== undefined)  tabN  = Math.max(tabN,  serverTab);
+  if(serverFace !== undefined) faceN = Math.max(faceN, serverFace);
+  document.getElementById('tab-n').textContent  = tabN;
+  document.getElementById('face-n').textContent = faceN;
+  document.getElementById('h-tab').value  = tabN;
+  document.getElementById('h-face').value = faceN;
+  const tb = document.getElementById('tab-badge');
+  const fb = document.getElementById('face-badge');
+  tb.style.background = tabN  >= MAX_TAB-1  ? '#dc2626':'rgba(255,255,255,.1)';
+  fb.style.background = faceN >= MAX_FACE-1 ? '#dc2626':'rgba(255,255,255,.1)';
+}
+
+/* ── Log alert to server ── */
+async function logAlert(type){
+  try{
+    const r = await fetch(LOG_URL,{
+      method:'POST',
+      headers:{'Content-Type':'application/json','X-CSRFToken':CSRF},
+      body:JSON.stringify({alert_type:type, course_id:COURSE_ID, session_token:SESSION_TOK})
+    });
+    const data = await r.json();
+    sync(data.tab_count, data.face_count);
+    return data;
+  }catch(e){ return {}; }
+}
+
+/* ── Submit ── */
+function autoSub(reason){
+  if(done) return; done=true; clearInterval(ticker);
+  document.getElementById('h-auto').value='true';
+  toast('🚨 Auto-submitting exam now…','danger');
+  setTimeout(()=>document.getElementById('eform').submit(), 900);
+}
+
+function manualSubmit(){
+  if(!confirm('Submit your exam? This cannot be undone.')) return;
+  done=true; clearInterval(ticker);
+  document.getElementById('eform').submit();
+}
+
+/* ── Timer ── */
+function fmt(s){ return `${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`; }
+document.getElementById('timer').textContent = fmt(SECS);
+const ticker = setInterval(()=>{
+  if(done) return;
+  timeLeft--;
+  document.getElementById('timer').textContent = fmt(timeLeft);
+  const p = document.getElementById('timer-pill');
+  if(timeLeft <= 300)      p.style.background='#ef4444';
+  else if(timeLeft <= 600) p.style.background='#f97316';
+  if(timeLeft===300) toast('⏱️ 5 minutes remaining!','warn');
+  if(timeLeft===60)  toast('⏱️ 60 seconds remaining!','danger');
+  if(timeLeft<=0){ clearInterval(ticker); toast('⏰ Time is up!','danger'); autoSub('timer'); }
+},1000);
+
+/* ── Tab / window switch monitor ── */
+function handleFocusLoss(){
+  if(done) return;
+  logAlert('tab_switch').then(d=>{
+    const n = d.tab_count !== undefined ? d.tab_count : ++tabN;
+    sync(n, undefined);
+    if(n >= MAX_TAB){
+      toast('🚨 Max tab switches reached. Auto-submitting.','danger');
+      autoSub('tab');
+    } else {
+      toast(`⚠️ Focus lost — warning ${n}/${MAX_TAB}`,'warn');
+    }
+  });
+}
+document.addEventListener('visibilitychange', ()=>{ if(document.hidden) handleFocusLoss(); });
+window.addEventListener('blur', handleFocusLoss);
+
+/* ── Server heartbeat (every 30s) ── */
+setInterval(async()=>{
+  if(done) return;
+  try{
+    const r = await fetch(`${STATUS_URL}?token=${SESSION_TOK}`);
+    const d = await r.json();
+    if(d.status==='submitted'||d.status==='expired'){
+      done=true; clearInterval(ticker);
+      toast('Session expired. Submitting…','danger');
+      setTimeout(()=>document.getElementById('eform').submit(), 800);
+    }
+    if(d.remaining_seconds !== undefined){
+      timeLeft = Math.min(timeLeft, d.remaining_seconds);
+    }
+    sync(d.tab_count, d.face_count);
+  }catch(e){}
+}, 30000);
+
+/* ════════════════════════════════════════════════════════
+   REAL WEBCAM FACE DETECTION
+   Uses MediaDevices API + a lightweight pixel heuristic.
+   In production, drop in face-api.js TinyFaceDetector for
+   ML-based detection — the architecture is identical.
+════════════════════════════════════════════════════════ */
+(async function initCamera(){
+  const video  = document.getElementById('cam');
+  const canvas = document.getElementById('cnv');
+  const box    = document.getElementById('cam-status');
+  const ind    = document.getElementById('face-ind');
+
+  /* ── Request camera permission ── */
+  let stream;
+  try {
+    stream = await navigator.mediaDevices.getUserMedia({
+      video: { width: 140, height: 105, facingMode: 'user' }
+    });
+  } catch(e) {
+    console.warn('Camera denied:', e.message);
+    toast('📷 Camera not available — proctoring limited.', 'info');
+    return;
+  }
+
+  video.srcObject = stream;
+  await new Promise(res=>{ video.onloadedmetadata = res; });
+  box.classList.remove('hidden');
+
+  const ctx = canvas.getContext('2d', {willReadFrequently: true});
+  let consecutiveMiss = 0;
+  const SAMPLE_W = 70, SAMPLE_H = 53;     // half-res for speed
+  const SKIN_THRESHOLD = 0.035;           // min skin-pixel ratio
+  const CONSEC_MISS_LIMIT = 2;            // 2 consecutive bad frames → alert
+
+  /*
+   * Skin-tone detection heuristic (Kovac et al. 2003 RGB rule):
+   *   R > 95, G > 40, B > 20
+   *   max(R,G,B) - min(R,G,B) > 15
+   *   |R-G| > 15, R > G, R > B
+   *
+   * This correctly detects most human skin tones under normal
+   * indoor lighting. Replace with TinyFaceDetector for ML accuracy.
+   */
+  function detectFacePresent(){
+    ctx.drawImage(video, 0, 0, SAMPLE_W, SAMPLE_H);
+    const {data} = ctx.getImageData(0, 0, SAMPLE_W, SAMPLE_H);
+    let skinPx = 0;
+    const total = SAMPLE_W * SAMPLE_H;
+    for(let i=0; i<data.length; i+=4){
+      const r=data[i], g=data[i+1], b=data[i+2];
+      const mx=Math.max(r,g,b), mn=Math.min(r,g,b);
+      if(r>95 && g>40 && b>20 && mx-mn>15 && Math.abs(r-g)>15 && r>g && r>b){
+        skinPx++;
+      }
+    }
+    return (skinPx / total) >= SKIN_THRESHOLD;
+  }
+
+  function updateFaceIndicator(detected){
+    if(detected){
+      ind.style.color='#4ade80';
+      ind.textContent='✔ Face OK';
+    } else {
+      ind.style.color='#f87171';
+      ind.textContent='✘ No Face';
+    }
+  }
+
+  /* Check every 4 seconds */
+  setInterval(()=>{
+    if(done) return;
+    const faceFound = detectFacePresent();
+    updateFaceIndicator(faceFound);
+
+    if(!faceFound){
+      consecutiveMiss++;
+      if(consecutiveMiss >= CONSEC_MISS_LIMIT){
+        consecutiveMiss = 0;
+        logAlert('no_face').then(d=>{
+          const n = d.face_count !== undefined ? d.face_count : ++faceN;
+          sync(undefined, n);
+          if(n >= MAX_FACE){
+            toast('🚨 Face not detected. Auto-submitting.','danger');
+            autoSub('face');
+          } else {
+            toast(`👤 Face not detected — warning ${n}/${MAX_FACE}`,'warn');
+          }
+        });
+      }
+    } else {
+      consecutiveMiss = 0;
+    }
+  }, 4000);
+})();
+
+/* ── Block common cheat shortcuts ── */
+document.addEventListener('keydown', e=>{
+  const blocked = e.key==='F12'
+    || (e.ctrlKey && ['c','v','u','s','p','a','i'].includes(e.key.toLowerCase()))
+    || (e.metaKey && ['c','v','u','s','p','a','i'].includes(e.key.toLowerCase()));
+  if(blocked){ e.preventDefault(); }
+});
+
+/* ── Block print ── */
+window.addEventListener('beforeprint', e=>e.preventDefault());
+</script>
+</body>
+</html>

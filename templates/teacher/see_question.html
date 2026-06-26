@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block title %}Questions – {{ course.course_name }}{% endblock %}
+{% block sidebar %}{% include 'teacher/teacher_sidebar.html' %}{% endblock %}
+{% block page_title %}{{ course.course_name }}{% endblock %}
+{% block content %}
+<div class="flex justify-between items-center mb-4">
+  <p class="text-gray-500 text-sm">{{ questions|length }} question(s)</p>
+  <a href="{% url 'teacher-view-question' %}" class="btn-secondary">← Back</a>
+</div>
+<div class="space-y-3">
+{% for q in questions %}
+<div class="card">
+  <div class="flex justify-between items-start">
+    <p class="font-medium text-gray-800 flex-1 mr-4">{{ forloop.counter }}. {{ q.question }}</p>
+    <div class="flex gap-2 flex-shrink-0">
+      <span class="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded font-semibold">{{ q.marks }} mk</span>
+      <a href="{% url 'remove-question' q.id %}" class="btn-danger text-xs py-1" onclick="return confirm('Delete?')">🗑️</a>
+    </div>
+  </div>
+  <div class="grid grid-cols-2 gap-2 mt-3 text-sm">
+    <span class="{% if q.answer == 'Option1' %}bg-green-100 text-green-800 font-semibold{% else %}bg-gray-50{% endif %} rounded px-3 py-1.5">① {{ q.option1 }}</span>
+    <span class="{% if q.answer == 'Option2' %}bg-green-100 text-green-800 font-semibold{% else %}bg-gray-50{% endif %} rounded px-3 py-1.5">② {{ q.option2 }}</span>
+    <span class="{% if q.answer == 'Option3' %}bg-green-100 text-green-800 font-semibold{% else %}bg-gray-50{% endif %} rounded px-3 py-1.5">③ {{ q.option3 }}</span>
+    <span class="{% if q.answer == 'Option4' %}bg-green-100 text-green-800 font-semibold{% else %}bg-gray-50{% endif %} rounded px-3 py-1.5">④ {{ q.option4 }}</span>
+  </div>
+</div>
+{% empty %}<div class="card text-center py-12 text-gray-400">No questions for this exam yet.</div>
+{% endfor %}
+</div>
+{% endblock %}

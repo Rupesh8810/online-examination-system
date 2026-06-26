@@ -1,0 +1,13 @@
+/* BBDNIIT Exam Platform - Custom Styles */
+/* College logo placement: replace the emoji in base.html header with an <img> tag */
+
+/* Scrollbar styling */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #f1f5f9; }
+::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 3px; }
+
+/* Print: hide sidebar and navbar */
+@media print {
+  aside, header, #toast-container, #toasts { display: none !important; }
+  main { padding: 0 !important; }
+}

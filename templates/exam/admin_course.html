@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block title %}Courses{% endblock %}
+{% block sidebar %}{% include 'exam/admin_sidebar.html' %}{% endblock %}
+{% block page_title %}Academic Management{% endblock %}
+{% block content %}
+<div class="grid grid-cols-2 gap-4">
+  <a href="{% url 'admin-add-course' %}" class="card hover:shadow-md transition text-center p-6 border-2 hover:border-blue-300">
+    <div class="text-3xl mb-2">🎓</div><p class="font-semibold">Add Programme</p>
+  </a>
+  <a href="{% url 'admin-view-course' %}" class="card hover:shadow-md transition text-center p-6 border-2 hover:border-blue-300">
+    <div class="text-3xl mb-2">📋</div><p class="font-semibold">View Programmes</p>
+  </a>
+  <a href="{% url 'admin-add-subject' %}" class="card hover:shadow-md transition text-center p-6 border-2 hover:border-blue-300">
+    <div class="text-3xl mb-2">📚</div><p class="font-semibold">Add Subject</p>
+  </a>
+  <a href="{% url 'admin-view-subject' %}" class="card hover:shadow-md transition text-center p-6 border-2 hover:border-blue-300">
+    <div class="text-3xl mb-2">📖</div><p class="font-semibold">View Subjects</p>
+  </a>
+</div>
+{% endblock %}
