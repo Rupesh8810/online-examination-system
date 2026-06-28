@@ -1,7 +1,24 @@
-# BBDNIIT Online Examination Platform
+# 🎓 BBDNIIT Online Examination Platform
 
-A **college-grade, AI-proctored online examination system** built with Django 4.2, TailwindCSS, and
+![Django](https://img.shields.io/badge/Django-4.2-092E20?style=for-the-badge&logo=django&logoColor=white)
+![Python](https://img.shields.io/badge/Python-3.10+-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![TailwindCSS](https://img.shields.io/badge/TailwindCSS-38B2AC?style=for-the-badge&logo=tailwindcss&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-336791?style=for-the-badge&logo=postgresql&logoColor=white)
+![Redis](https://img.shields.io/badge/Redis-DC382D?style=for-the-badge&logo=redis&logoColor=white)
+![SQLite](https://img.shields.io/badge/SQLite-07405E?style=for-the-badge&logo=sqlite&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-CONTAINERIZED-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+![Gunicorn](https://img.shields.io/badge/Gunicorn-499848?style=for-the-badge&logo=gunicorn&logoColor=white)
+![AI Proctoring](https://img.shields.io/badge/AI%20PROCTORING-ENABLED-FF6B35?style=for-the-badge)
+![License](https://img.shields.io/badge/LICENSE-EDUCATIONAL-7E57C2?style=for-the-badge)
+
+---
+
+**A college-grade, AI-proctored online examination system** built with Django 4.2, TailwindCSS, and
 modern web technologies — capable of handling 100–200 concurrent students.
+
+---
+
+## LIVE URL :https://college-exam-platform-1.onrender.com/
 
 ---
 
